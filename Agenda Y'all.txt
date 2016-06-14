@@ -1,0 +1,34 @@
+This is my agenda yo. Get on my level M8080
+
+
+- I am a bit 'behind' on this term's documentation
+- I have two weeks to finish it. I probs won't aye
+- I basically need class time to finish cause I got work a lot n other homework n shit
+- And IPT
+- Other than that it's going well
+- I have to actually read the documentation requirements though
+- What is the 'bare minimum' that I need to get full marks, cause I can't afford to spend time doing extra shiznickle
+- Can't I just submit 4Pong :p
+
+Progress since last meeting:
+- Changed to love
+- Made random level generation
+- Finally Fixed Pathfinding
+- Made player control stuff
+- Made enemies seek and attack players
+- Made a turn system
+- Added fortification
+- Added items
+- Added item usage
+- Added item pickup
+- Added player, enemy and item randomization
+- Bug fixes galore
+- I'm the best procrast in the nation
+
+What I need to do:
+- Menus n stuff
+- Player preferences
+- Textures and stuff
+- Animated thingamabobs
+- Audio
+- Fix that fricken bug that keeps on breaking the pathfinding
