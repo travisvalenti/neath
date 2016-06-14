@@ -92,6 +92,11 @@ menu.scene.splash = {
 
 menu.scene.settings = {
 	click = function(x, y)
+
+		if x > settings.window.width - 38 and y < 38 then
+			love.event.quit()
+		end
+
 		if util.inside(x, y, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y + 128 + 50, 128, 128) then
 			menu.current = menu.scene.settings.last
 		end
@@ -112,6 +117,14 @@ menu.scene.settings = {
 			end
 		end
 
+		if util.inside(x, y, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y, 128, 128) then
+			if menu.subMenu == menu.scene.settings.controls then
+				menu.subMenu = nil
+			else
+				menu.subMenu = menu.scene.settings.controls
+			end
+		end
+
 		if menu.subMenu then
 			menu.subMenu.click(x, y)
 		end
@@ -120,7 +133,7 @@ menu.scene.settings = {
 	draw = function ()
 		love.graphics.clear(50,50,50)
 		love.graphics.setColor(255,255,255)
-
+		love.graphics.draw(images.off, love.graphics.getWidth() - 38, 6)
 		love.graphics.draw(images.menu.settings.controls, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y)
 		love.graphics.printf("Controls", love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
 
@@ -169,10 +182,32 @@ menu.scene.settings.sound = {
 }
 
 menu.scene.settings.graphics = {
+	resolutions = {
+		{w = 1280, h = 720},
+		{w = 1600, h = 900},
+		{w = 1920, h = 1080},
+		{w = 4069, h = 2160},
+	},
+	resolution_dropdown = false,
 	click = function(x, y)
 		if util.inside(x, y, love.graphics.getWidth() / 2 - 32, 100, 64, 64) then
 			settings.bFullscreen = not settings.bFullscreen
 			love.window.setFullscreen(settings.bFullscreen)
+		end
+
+		if util.inside(x, y,  love.graphics.getWidth() / 2 - 80, 200, 160, 30) then
+			menu.scene.settings.graphics.resolution_dropdown = not menu.scene.settings.graphics.resolution_dropdown
+		end
+
+		if menu.scene.settings.graphics.resolution_dropdown then
+			for i = 1, #menu.scene.settings.graphics.resolutions do
+				if util.inside(x, y,  love.graphics.getWidth() / 2 - 80, 200 + i * 30, 160, 30) then
+					settings.window.width = menu.scene.settings.graphics.resolutions[i].w
+					settings.window.height = menu.scene.settings.graphics.resolutions[i].h
+					love.window.setMode(settings.window.width, settings.window.height, {fullscreentype = "desktop"})
+					love.window.setFullscreen(settings.bFullscreen)
+				end
+			end
 		end
 
 
@@ -184,6 +219,46 @@ menu.scene.settings.graphics = {
 		else
 			love.graphics.draw(images.expand, love.graphics.getWidth() / 2 - 32, 100)
 		end
+
+		love.graphics.setColor(245,245,245)
+		love.graphics.rectangle("fill", love.graphics.getWidth() / 2 - 80, 200, 160, 30)
+		current_resolution = settings.window.width.." x "..settings.window.height
+		love.graphics.setColor(0,0,0)
+		love.graphics.rectangle("line", love.graphics.getWidth() / 2 - 80, 200, 160, 30)
+
+		love.graphics.printf(current_resolution, love.graphics.getWidth() / 2 - 80, 208, 160, "center")
+
+		if menu.scene.settings.graphics.resolution_dropdown then
+			for i = 1, #menu.scene.settings.graphics.resolutions do
+				res = menu.scene.settings.graphics.resolutions[i].w.." x "..menu.scene.settings.graphics.resolutions[i].h
+
+				love.graphics.setColor(245,245,245)
+				love.graphics.rectangle("fill", love.graphics.getWidth() / 2 - 80, 200 + i * 30, 160, 30)
+				love.graphics.setColor(0,0,0)
+				love.graphics.printf(res, love.graphics.getWidth() / 2 - 80, 208 + i * 30, 160, "center")
+			end
+			love.graphics.rectangle("line", love.graphics.getWidth() / 2 - 80, 200 + 30, 160, #menu.scene.settings.graphics.resolutions * 30)
+
+		end
+
+	end,
+}
+
+menu.scene.settings.controls = {
+	click = function(x, y)
+		if util.inside(x, y, love.graphics.getWidth() / 2 - 32, 100, 64, 64) then
+			settings.bGrabMouse = not settings.bGrabMouse
+			love.mouse.setGrabbed(settings.bGrabMouse)
+		end
+	end,
+	draw = function ()
+		love.graphics.setColor(255,255,255)
+		if settings.bMuted then
+			love.graphics.draw(images.unlocking, love.graphics.getWidth() / 2 - 32, 100)
+		else
+			love.graphics.draw(images.unlocking, love.graphics.getWidth() / 2 - 32, 100)
+		end
+
 	end,
 }
 

@@ -61,6 +61,8 @@ function love.load(arg) -- Load the level
 	images.contract = love.graphics.newImage('/assets/contract.png')
 	images.expand = love.graphics.newImage('/assets/expand.png')
 
+	images.unlocking = love.graphics.newImage('/assets/unlocking.png')
+
 	images.path_marker = love.graphics.newImage('/assets/position_marker.png')
 	images.attack_hover = love.graphics.newImage('/assets/crossed-swords.png')
 	images.use_hover = love.graphics.newImage('/assets/cog.png')
