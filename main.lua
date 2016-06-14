@@ -28,6 +28,11 @@ scale = 200/256
 function love.load(arg) -- Load the level
 	music = love.audio.newSource("/assets/sb_fading.mp3")
 	music:play()
+	if settings.bMuted then
+		music:setVolume(0)
+	else
+		music:setVolume(settings.volume)
+	end
 
 	font = love.graphics.newFont(12)
 	love.graphics.setFont(font)
@@ -50,6 +55,11 @@ function love.load(arg) -- Load the level
 	images.off = love.graphics.newImage('/assets/off.png')
 	images.prisoner_locked = love.graphics.newImage('/assets/prisoner_locked.png')
 	images.prisoner_unlocked = love.graphics.newImage('/assets/prisoner_unlocked.png')
+	images.mute = love.graphics.newImage('/assets/speaker-off.png')
+	images.unmute = love.graphics.newImage('/assets/speaker.png')
+
+	images.contract = love.graphics.newImage('/assets/contract.png')
+	images.expand = love.graphics.newImage('/assets/expand.png')
 
 	images.path_marker = love.graphics.newImage('/assets/position_marker.png')
 	images.attack_hover = love.graphics.newImage('/assets/crossed-swords.png')

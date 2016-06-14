@@ -1,6 +1,7 @@
 settings = {
 	bGrabMouse = false,
-
+	bMuted = false,
+	volume = 0.95,
 	window = {
 		width = 1200,
 		height = 720,

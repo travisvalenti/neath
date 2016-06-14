@@ -52,17 +52,17 @@ function hero.new(ix, iy, c)
 end
 
 inventory = {}
-inventory.x = 900
+inventory.x = 300
 inventory.y = 225
 inventory.w = 200
 
 inventory.sword = {
-	x = 900,
+	x = 300,
 	y = 95,
 }
 
 inventory.armour = {
-	x = 900,
+	x = 300,
 	y = 150,
 }
 
@@ -224,40 +224,40 @@ function hero.drawInventory(h)
 	--love.graphics.rectangle("fill", 100, 160, 50, 50)
 
 	love.graphics.setColor(0, 0, 0)
-	love.graphics.rectangle('fill', inventory.sword.x, inventory.sword.y, 50, 50)
+	love.graphics.rectangle('fill', love.graphics.getWidth() - inventory.sword.x, inventory.sword.y, 50, 50)
 	love.graphics.setColor(255, 255, 255)
-	love.graphics.rectangle('line', inventory.sword.x, inventory.sword.y, 50,50)
+	love.graphics.rectangle('line', love.graphics.getWidth() - inventory.sword.x, inventory.sword.y, 50,50)
 	if hero[h].sword then
 		love.graphics.setColor(255,255,255)
-		love.graphics.print(hero[h].sword.name, inventory.sword.x + 60, inventory.sword.y + 10)
-		love.graphics.print("+"..hero[h].sword.funcValue.." attack", inventory.sword.x + 60, inventory.sword.y + 30)
-		love.graphics.draw(hero[h].sword.image, inventory.sword.x, inventory.sword.y, nil, 100/256)
+		love.graphics.print(hero[h].sword.name, love.graphics.getWidth() - inventory.sword.x + 60, inventory.sword.y + 10)
+		love.graphics.print("+"..hero[h].sword.funcValue.." attack", love.graphics.getWidth() - inventory.sword.x + 60, inventory.sword.y + 30)
+		love.graphics.draw(hero[h].sword.image, love.graphics.getWidth() - inventory.sword.x, inventory.sword.y, nil, 100/256)
 	else
-		love.graphics.print('No Weapon', inventory.sword.x + 60, inventory.sword.y + 10)
+		love.graphics.print('No Weapon', love.graphics.getWidth() - inventory.sword.x + 60, inventory.sword.y + 10)
 	end
 
 	love.graphics.setColor(0, 0, 0)
-	love.graphics.rectangle('fill', inventory.armour.x, inventory.armour.y, 50, 50)
+	love.graphics.rectangle('fill', love.graphics.getWidth() - inventory.armour.x, inventory.armour.y, 50, 50)
 	love.graphics.setColor(255, 255, 255)
-	love.graphics.rectangle('line', inventory.armour.x, inventory.armour.y, 50,50)
+	love.graphics.rectangle('line', love.graphics.getWidth() - inventory.armour.x, inventory.armour.y, 50,50)
 	if hero[h].armour then
 		love.graphics.setColor(255,255,255)
-		love.graphics.print(hero[h].armour.name, inventory.armour.x + 60, inventory.armour.y + 10)
-		love.graphics.print("+"..hero[h].armour.funcValue.." max health", inventory.armour.x + 60, inventory.armour.y + 30)
-		love.graphics.draw(hero[h].armour.image, inventory.armour.x, inventory.armour.y, nil, 50/128)
+		love.graphics.print(hero[h].armour.name, love.graphics.getWidth() - inventory.armour.x + 60, inventory.armour.y + 10)
+		love.graphics.print("+"..hero[h].armour.funcValue.." max health", love.graphics.getWidth() - inventory.armour.x + 60, inventory.armour.y + 30)
+		love.graphics.draw(hero[h].armour.image, love.graphics.getWidth() - inventory.armour.x, inventory.armour.y, nil, 50/128)
 
 	else
-		love.graphics.print('No Armour', inventory.armour.x + 60, inventory.armour.y + 10)
+		love.graphics.print('No Armour', love.graphics.getWidth() - inventory.armour.x + 60, inventory.armour.y + 10)
 	end
 
 	for x = 1, 4 do
 		for y = 1, hero[h].capacity / 4 do
 			love.graphics.setColor(0,0,0)
-			love.graphics.rectangle("fill", inventory.x + (x - 1) * 50, inventory.y + (y - 1) * 50, 50, 50)
+			love.graphics.rectangle("fill", love.graphics.getWidth() - inventory.x + (x - 1) * 50, inventory.y + (y - 1) * 50, 50, 50)
 			love.graphics.setColor(255,255,255)
-			love.graphics.rectangle("line", inventory.x + (x - 1) * 50, inventory.y + (y - 1) * 50, 50, 50)
+			love.graphics.rectangle("line", love.graphics.getWidth() - inventory.x + (x - 1) * 50, inventory.y + (y - 1) * 50, 50, 50)
 			if hero[h].items[x + (y - 1) * 4] then
-				love.graphics.draw(hero[h].items[x + (y - 1) * 4].image, inventory.x + (x - 1) * 50, inventory.y + (y - 1) * 50, nil, 50/128)
+				love.graphics.draw(hero[h].items[x + (y - 1) * 4].image, love.graphics.getWidth() - inventory.x + (x - 1) * 50, inventory.y + (y - 1) * 50, nil, 50/128)
 			end
 		end
 	end

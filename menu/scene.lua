@@ -4,38 +4,36 @@ menu.scene.main = {
 	button_y = 360,
 	button_size = 100,
 	margin = 20,
-	middle = settings.window.width / 2,
+	middle = love.graphics.getWidth() / 2,
 	click = function(x, y)
 		if x > settings.window.width - 38 and y < 38 then
 			love.event.quit()
-		elseif util.inside(x, y, menu.scene.main.middle - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y, 128, 128) then
+		elseif util.inside(x, y, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y, 128, 128) then
 			print("Start")
 			game.paused = false
 			game.started = true
-		elseif util.inside(x, y, menu.scene.main.middle - 64 , menu.scene.main.button_y, 128, 128) then
+		elseif util.inside(x, y, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y, 128, 128) then
 			print("Settings")
 			menu.scene.settings.last = menu.scene.main
 			menu.current = menu.scene.settings
-		elseif util.inside(x, y, menu.scene.main.middle + menu.scene.main.margin + 64, menu.scene.main.button_y, 128, 128) then
+		elseif util.inside(x, y, love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y, 128, 128) then
 			print("Quit")
 			love.event.quit()
 		end
 	end,
 	draw = function ()
 		love.graphics.clear(50,50,50)
-		love.graphics.draw(images.off, settings.window.width - 38, 6)
-		love.graphics.print("Main menu temp. Click anywhere to start.", 40, 40)
+		love.graphics.draw(images.off, love.graphics.getWidth() - 38, 6)
+
+		love.graphics.draw(images.menu.main.start, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y)
+		love.graphics.printf("Play", love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
+
+		love.graphics.draw(images.menu.main.settings, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y)
+		love.graphics.printf("Settings", love.graphics.getWidth() / 2 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
 
 
-		love.graphics.draw(images.menu.main.start, menu.scene.main.middle - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y)
-		love.graphics.printf("Play", menu.scene.main.middle - menu.scene.main.margin - 128 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
-
-		love.graphics.draw(images.menu.main.settings, menu.scene.main.middle - 64 , menu.scene.main.button_y)
-		love.graphics.printf("Settings", menu.scene.main.middle - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
-
-
-		love.graphics.draw(images.menu.main.quit, menu.scene.main.middle + menu.scene.main.margin + 64, menu.scene.main.button_y)
-		love.graphics.printf("Quit", menu.scene.main.middle + menu.scene.main.margin + 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
+		love.graphics.draw(images.menu.main.quit, love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y)
+		love.graphics.printf("Quit", love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
 
 
 	end
@@ -80,6 +78,8 @@ menu.scene.splash = {
 	end,
 	draw = function ()
 		love.graphics.clear(50,50,50)
+		love.graphics.setColor(255,255,255)
+
 		love.graphics.draw(images.logo_big, 350, 110)
 		width = font:getWrap("Press any key", 1000)
 		love.graphics.printf("Press any key", 600-width/2, 690, width, "center")
@@ -92,28 +92,99 @@ menu.scene.splash = {
 
 menu.scene.settings = {
 	click = function(x, y)
-		if util.inside(x, y, menu.scene.main.middle - 64 , menu.scene.main.button_y + 128 + 50, 128, 128) then
+		if util.inside(x, y, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y + 128 + 50, 128, 128) then
 			menu.current = menu.scene.settings.last
 		end
+
+		if util.inside(x, y, love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y, 128, 128) then
+			if menu.subMenu == menu.scene.settings.sound then
+				menu.subMenu = nil
+			else
+				menu.subMenu = menu.scene.settings.sound
+			end
+		end
+
+		if util.inside(x, y, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y, 128, 128) then
+			if menu.subMenu == menu.scene.settings.graphics then
+				menu.subMenu = nil
+			else
+				menu.subMenu = menu.scene.settings.graphics
+			end
+		end
+
+		if menu.subMenu then
+			menu.subMenu.click(x, y)
+		end
+
 	end,
 	draw = function ()
 		love.graphics.clear(50,50,50)
+		love.graphics.setColor(255,255,255)
 
-		love.graphics.draw(images.menu.settings.controls, menu.scene.main.middle - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y)
-		love.graphics.printf("Controls", menu.scene.main.middle - menu.scene.main.margin - 128 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
+		love.graphics.draw(images.menu.settings.controls, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y)
+		love.graphics.printf("Controls", love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
 
-		love.graphics.draw(images.menu.settings.graphics, menu.scene.main.middle - 64 , menu.scene.main.button_y)
-		love.graphics.printf("Graphics", menu.scene.main.middle - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
+		love.graphics.draw(images.menu.settings.graphics, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y)
+		love.graphics.printf("Graphics", love.graphics.getWidth() / 2 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
 
-		love.graphics.draw(images.menu.go_back, menu.scene.main.middle - 64 , menu.scene.main.button_y + 128 + 50)
-		love.graphics.printf("Go Back", menu.scene.main.middle - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin + 128 + 50, 128, "center")
+		love.graphics.draw(images.menu.go_back, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y + 128 + 50)
+		love.graphics.printf("Go Back", love.graphics.getWidth() / 2 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin + 128 + 50, 128, "center")
 
 
-		love.graphics.draw(images.menu.settings.sound, menu.scene.main.middle + menu.scene.main.margin + 64, menu.scene.main.button_y)
-		love.graphics.printf("Sound", menu.scene.main.middle + menu.scene.main.margin + 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
+		love.graphics.draw(images.menu.settings.sound, love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y)
+		love.graphics.printf("Sound", love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
+
+		if menu.subMenu then
+			menu.subMenu.draw()
+		end
 
 	end,
 
+}
+
+menu.scene.settings.sound = {
+	click = function(x, y)
+		if util.inside(x, y, love.graphics.getWidth() / 2 - 32, 100, 64, 64) then
+			settings.bMuted = not settings.bMuted
+		end
+
+		if util.inside(x, y, love.graphics.getWidth() / 2 - 128, 200, 254, 20) then
+			settings.volume = (x - love.graphics.getWidth() / 2 + 128)/254
+		end
+
+	end,
+	draw = function ()
+		love.graphics.setColor(255,255,255)
+		if settings.bMuted then
+			love.graphics.draw(images.mute, love.graphics.getWidth() / 2 - 32, 100)
+		else
+			love.graphics.draw(images.unmute, love.graphics.getWidth() / 2 - 32, 100)
+		end
+		love.graphics.setColor(200,200,200)
+		love.graphics.rectangle("fill", love.graphics.getWidth() / 2 - 128, 200, 256, 20)
+		love.graphics.setColor(10,10,10)
+		love.graphics.rectangle("fill", love.graphics.getWidth() / 2 - 128 + 2, 202, 254 * settings.volume, 16)
+
+	end,
+}
+
+menu.scene.settings.graphics = {
+	click = function(x, y)
+		if util.inside(x, y, love.graphics.getWidth() / 2 - 32, 100, 64, 64) then
+			settings.bFullscreen = not settings.bFullscreen
+			love.window.setFullscreen(settings.bFullscreen)
+		end
+
+
+	end,
+	draw = function ()
+		love.graphics.setColor(255,255,255)
+		if settings.bFullscreen then
+			love.graphics.draw(images.contract, love.graphics.getWidth() / 2 - 32, 100)
+		else
+			love.graphics.draw(images.expand, love.graphics.getWidth() / 2 - 32, 100)
+		end
+	end,
 }
 
 menu.scene.paused = {
@@ -124,15 +195,15 @@ menu.scene.paused = {
 	click = function(x, y)
 		if x > settings.window.width - 38 and y < 38 then
 			love.event.quit()
-		elseif util.inside(x, y, menu.scene.main.middle - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y, 128, 128) then
+		elseif util.inside(x, y, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y, 128, 128) then
 			print("Continue")
 			game.paused = false
 			game.started = true
-		elseif util.inside(x, y, menu.scene.main.middle - 64 , menu.scene.main.button_y, 128, 128) then
+		elseif util.inside(x, y, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y, 128, 128) then
 			print("Settings")
 			menu.scene.settings.last = menu.scene.paused
 			menu.current = menu.scene.settings
-		elseif util.inside(x, y, menu.scene.main.middle + menu.scene.main.margin + 64, menu.scene.main.button_y, 128, 128) then
+		elseif util.inside(x, y, love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y, 128, 128) then
 			print("Quit")
 			love.event.quit()
 		end
@@ -143,15 +214,15 @@ menu.scene.paused = {
 		love.graphics.print("Pause menu temp. Click anywhere to start.", 40, 40)
 
 
-		love.graphics.draw(images.menu.go_back, menu.scene.main.middle - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y)
-		love.graphics.printf("Continue", menu.scene.main.middle - menu.scene.main.margin - 128 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
+		love.graphics.draw(images.menu.go_back, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y)
+		love.graphics.printf("Continue", love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
 
-		love.graphics.draw(images.menu.main.settings, menu.scene.main.middle - 64 , menu.scene.main.button_y)
-		love.graphics.printf("Settings", menu.scene.main.middle - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
+		love.graphics.draw(images.menu.main.settings, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y)
+		love.graphics.printf("Settings", love.graphics.getWidth() / 2 - 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
 
 
-		love.graphics.draw(images.menu.main.quit, menu.scene.main.middle + menu.scene.main.margin + 64, menu.scene.main.button_y)
-		love.graphics.printf("Quit", menu.scene.main.middle + menu.scene.main.margin + 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
+		love.graphics.draw(images.menu.main.quit, love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y)
+		love.graphics.printf("Quit", love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y + 128 + menu.scene.main.margin, 128, "center")
 
 
 	end

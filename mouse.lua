@@ -20,7 +20,7 @@ function mouse.overInventoryItem(h)
 		gx = (i - 1) % 4 + 1
 		gy = (i - gx) / 4 + 1
 		--print(gx, gy)
-		if util.inside(x, y, inventory.x + (gx - 1) * 50, inventory.y + (gy - 1) * 50, 50, 50) then
+		if util.inside(x, y, love.graphics.getWidth() - inventory.x + (gx - 1) * 50, inventory.y + (gy - 1) * 50, 50, 50) then
 			return i
 		end
 	end
