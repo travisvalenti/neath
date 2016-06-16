@@ -244,6 +244,7 @@ function enemy.draw(i)
 end
 
 function enemy.drawUI(i, p)
+  --[[
 	uiheight = 70
 	love.graphics.setColor(20, 20, 20)
 	love.graphics.rectangle("fill", p * 200 - 200, settings.window.height - uiheight, 200, uiheight)
@@ -253,6 +254,7 @@ function enemy.drawUI(i, p)
 		'\nHealth: '..enemy[i].health..'/'..enemy[i].maxhealth..
 		'\nPosition: '..enemy[i].x..', '..enemy[i].y
 		, 10 + p * 200 - 200, settings.window.height - uiheight + 10)
+    ]]
 end
 
 function enemy.mousepressed(x, y, button, istouch)

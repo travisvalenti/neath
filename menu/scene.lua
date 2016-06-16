@@ -42,15 +42,14 @@ menu.scene.main = {
 
 menu.scene.lost = {
 	click = function(x, y)
-		center = settings.window.width/2
 
 		if x > settings.window.width - 38 and y < 38 then
 			love.event.quit()
-		elseif util.inside(x, y, center-132, 490, 128, 128) then
+		elseif util.inside(x, y, love.graphics.getWidth() / 2 - 132, 490, 128, 128) then
 			game.reset()
 			game.paused = false
 			game.started = true
-		elseif util.inside(x, y, center+10, 490, 128, 128) then
+		elseif util.inside(x, y, love.graphics.getWidth() / 2 + 10, 490, 128, 128) then
 			game.reset()
 			game.paused = true
 			game.started = false
@@ -60,15 +59,14 @@ menu.scene.lost = {
 	draw = function ()
 		love.graphics.clear(50,50,50)
 		love.graphics.setColor(255, 255,255)
-		center = settings.window.width/2
-		love.graphics.draw(images.logo, center - 80, 150)
+		love.graphics.draw(images.logo, love.graphics.getWidth() / 2 - 80, 150)
 		width = font:getWrap("You have failed. And quite spectacularly I might add.", 1000)
-		love.graphics.printf("You have failed. And quite spectacularly I might add.", center - width/2, 350, width, "center")
-		love.graphics.draw(images.retry, center - 132, 490)
-		love.graphics.draw(images.quit, center + 10, 490)
+		love.graphics.printf("You have failed. And quite spectacularly I might add.", love.graphics.getWidth() / 2 - width/2, 350, width, "center")
+		love.graphics.draw(images.retry, love.graphics.getWidth() / 2 - 132, 490)
+		love.graphics.draw(images.quit, love.graphics.getWidth() / 2 + 10, 490)
 		love.graphics.draw(images.off, settings.window.width - 38, 6)
-		love.graphics.printf("Play Again?", center - 128, 638, 128, "center")
-		love.graphics.printf("Give Up", center + 10, 638, 128, "center")
+		love.graphics.printf("Play Again?", love.graphics.getWidth() / 2 - 128, 638, 128, "center")
+		love.graphics.printf("Give Up", love.graphics.getWidth() / 2 + 10, 638, 128, "center")
 	end,
 }
 

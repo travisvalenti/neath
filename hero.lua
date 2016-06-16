@@ -191,11 +191,11 @@ function hero.move(i, x, y)
 			hero[i].y = node.path[1].y
 			hero[i].actions = hero[i].actions - 1
 			for n = #node.path, 1, -1  do
-				table.insert(hero[i].path, {x = node.path[n].x, y = node.path[n].y, grab = loot.at(node.path[n].x, node.path[n].y)})
+				table.insert(hero[i].path, {x = node.path[n].x, y = node.path[n].y, grab = false})
 			end
-			--if loot.at(node.path[n].x, node.path[n].y) then
-				--hero[i].path[#hero[i].path].grab = true
-			--end
+			if hero[i].path[#hero[i].path] then
+				hero[i].path[#hero[i].path].grab = loot.at(hero[i].path[#hero[i].path].x, hero[i].path[#hero[i].path].y)
+			end
 
 			wo = world_object.atpos(ix, iy)
 			if wo then
@@ -421,7 +421,7 @@ hero.status.flavor = {
 	function hero.status.draw(i)
 		love.graphics.setColor(255, 255, 255)
 		for s = 1, #hero[i].status do
-			love.graphics.draw(images.status[hero[i].status[s].name], settings.window.width - s * 74, 10)
+			love.graphics.draw(images.status[hero[i].status[s].name], love.graphics.getWidth() - s * 74, 10)
 		end
 		s = hero.status.over(i)
 		if s then
@@ -431,7 +431,7 @@ hero.status.flavor = {
 function hero.status.over(i)
 	x, y = love.mouse.getPosition()
 	for s = 1, #hero[i].status do
-		if util.inside(x, y, settings.window.width - s * 74, 10, 64, 64) then
+		if util.inside(x, y, love.graphics.getWidth() - s * 74, 10, 64, 64) then
 			return s
 		end
 	end
@@ -544,23 +544,16 @@ function hero.move_path(i, dt)
 			hero[i].time = 0
 		elseif hero[i].time == 1 then
 			hero[i].time = 0
-			if #hero[i].path < 2 then
-				hero[i].rx = hero[i].path[2].x
-				hero[i].ry = hero[i].path[2].y
-			end
-			--game.say(hero[i].path[1].x..', '..hero[i].path[1].y)
-			if hero[i].path[2].grab then
-				l = loot.at(hero[i].path[2].x, hero[i].path[2].y)
+
+			table.remove(hero[i].path, 1)
+
+			if hero[i].path[1].grab then
+				l = loot.at(hero[i].path[1].x, hero[i].path[1].y)
 				l2 = true
 				while l and l2 do
 					l2 = loot.pickup(l, i)
-					l = loot.at(hero[i].path[2].x, hero[i].path[2].y)
+					l = loot.at(hero[i].path[1].x, hero[i].path[1].y)
 				end
-			end
-			table.remove(hero[i].path, 1)
-			if #hero[i].path == 1 then
-				table.remove(hero[i].path, 1)
-				table.remove(hero[i].path, 1)
 			end
 		else
 			if #hero[i].path > 1 then
