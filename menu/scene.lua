@@ -23,6 +23,7 @@ menu.scene.main = {
 	end,
 	draw = function ()
 		love.graphics.clear(50,50,50)
+		love.graphics.setColor(255,255,255)
 		love.graphics.draw(images.off, love.graphics.getWidth() - 38, 6)
 
 		love.graphics.draw(images.menu.main.start, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y)
@@ -159,10 +160,20 @@ menu.scene.settings.sound = {
 	click = function(x, y)
 		if util.inside(x, y, love.graphics.getWidth() / 2 - 32, 100, 64, 64) then
 			settings.bMuted = not settings.bMuted
+			if settings.bMuted then
+				music:setVolume(0)
+			else
+				music:setVolume(settings.volume)
+			end
 		end
 
 		if util.inside(x, y, love.graphics.getWidth() / 2 - 128, 200, 254, 20) then
 			settings.volume = (x - love.graphics.getWidth() / 2 + 128)/254
+			if settings.bMuted then
+				music:setVolume(0)
+			else
+				music:setVolume(settings.volume)
+			end
 		end
 
 	end,
@@ -285,6 +296,7 @@ menu.scene.paused = {
 	end,
 	draw = function ()
 		love.graphics.clear(50,50,50)
+		love.graphics.setColor(255,255,255)
 		love.graphics.draw(images.off, settings.window.width - 38, 6)
 		love.graphics.print("Pause menu temp. Click anywhere to start.", 40, 40)
 

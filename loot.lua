@@ -7,7 +7,7 @@ function loot.functions.useless(h, i, v)
 end
 
 function loot.functions.potato(h, i, v)
-	game.say("You eat the potato. Raw. What is wrong with you? At least you gain 3 hp.")
+	game.say("You eat the eggplant. Raw. What is wrong with you? At least you gain 3 hp.")
 	hero.heal(h, 3)
 	table.remove(hero[h].items, i)
 end
