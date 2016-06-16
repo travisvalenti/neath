@@ -1,3 +1,35 @@
+--[[
+Okay. Here's the deal. It's 4am. I'm tired. This is going to be a very simple
+and abstracted explanation of the below code.
+I used the following pseudo-code from MIT to help:
+http://web.mit.edu/eranki/www/tutorials/search/
+-----------------------------------------------
+initialize the open list
+initialize the closed list
+put the starting node on the open list (you can leave its f at zero)
+
+while the open list is not empty
+    find the node with the least f on the open list, call it "q"
+    pop q off the open list
+    generate q's 8 successors and set their parents to q
+    for each successor
+    	if successor is the goal, stop the search
+        successor.g = q.g + distance between successor and q
+        successor.h = distance from goal to successor
+        successor.f = successor.g + successor.h
+
+        if a node with the same position as successor is in the OPEN list \
+            which has a lower f than successor, skip this successor
+        if a node with the same position as successor is in the CLOSED list \
+            which has a lower f than successor, skip this successor
+        otherwise, add the node to the open list
+    end
+    push q on the closed list
+end
+---------------------------------------------------
+That's basically how this works.
+]]
+
 pathfind = {}
 
 node = {}
@@ -6,6 +38,7 @@ node.closed = {}
 
 node.path = {}
 t = false
+--resets all variables
 function pathfind.reset()
 	path = false
 	while table.getn(node) > 0 do
@@ -24,7 +57,7 @@ function pathfind.reset()
 			table.remove(node.path, 1)
 	end
 end
-
+-- checks if pos x, y is in the path
 function pathfind.inpath(x, y)
 	for i = 1, #node.path do
 		if node.path[i].x == x and node.path[i].y == y then
@@ -33,7 +66,7 @@ function pathfind.inpath(x, y)
 	end
 	return false
 end
-
+ -- calculates the path
 function pathfind.calculate(ox, oy, tx, ty, d, tl)
 	node.failed = false
 	path = false
@@ -79,7 +112,7 @@ function pathfind.calculate(ox, oy, tx, ty, d, tl)
 		return false
 	end
 end
-
+-- steps though the path adding a new node each step
 function pathfind.step()
 	if #node.open > 0 and found ~= true then
 		qi = 1
@@ -232,7 +265,7 @@ function pathfind.step()
 	end
 	return false
 end
-
+-- traces back from the target through the nodes adding them all to a path list
 function pathfind.traceback(c)
 	while node[c].isOrigin ~= true do
 		table.insert(node.path, {x = node[c].x, y = node[c].y, px = node[node[c].parent].x, py = node[node[c].parent].y})
@@ -241,7 +274,7 @@ function pathfind.traceback(c)
 	table.insert(node.path, {x = node[c].x, y = node[c].y, px = 0, py = 0})
 
 end
-
+-- adds an open node
 function node.open.add(nx, ny, np, tx, ty)
 	i = table.getn(node) + 1
 	node[i] = {
@@ -256,7 +289,7 @@ function node.open.add(nx, ny, np, tx, ty)
 	table.insert(node.open, i)
 	return i
 end
-
+-- draws the calculations for debugging. Never called in game.
 function pathfind.debugcalulations()
 	for i = 1, table.getn(node.closed) do
 		love.graphics.setColor(0, 0, 200)
@@ -271,7 +304,8 @@ function pathfind.debugcalulations()
 		love.graphics.print(node[node.open[i]].f, node[node.open[i]].x * settings.render.tile_size, node[node.open[i]].y * settings.render.tile_size)
 	end
 end
-
+-- draws the path for debugging. A modified version of this is called in another
+-- file.
 function pathfind.debugpath()
 	if path then
 		for i = 1, table.getn(node.path)-1 do

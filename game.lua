@@ -1,15 +1,29 @@
 game = {}
-
+--[[
+This might seem odd. It's a secondary main loop that runs parrallel to the main.lua
+main loop. The reason this is is that it only calles draw and update and stuff if
+certain variables are met. This keeps the main.lua line free, and abstracts the
+gameplay from the menus.
+]]
 game.runtime = 0
-
+--resets the math seed and sets the window mode and icon and sets the mousegrabbed to
+--whatever the setting is.
 function game.init()
 	math.randomseed(os.time()) -- New seed because math.random sucks shittakke mushrooooms
-	love.window.setMode(settings.window.width, settings.window.height) -- We can change the window properties in the settings.
+	love.window.setMode(settings.window.width, settings.window.height, {fullscreentype = "desktop"}) -- We can change the window properties in the settings.
+	love.window.setFullscreen(settings.bFullscreen)
 	love.window.setIcon(love.image.newImageData('/assets/neath.png'))
 	love.window.setTitle(settings.window.title) -- of course, we need a title
 	love.mouse.setGrabbed(settings.bGrabMouse)
 end
-
+--[[ Resets all the game variables (map, world_object, enemy, loot, hero)
+ and calls an new init to spawn them
+ LEARNIN TIME: see those while #thing > 0 loops? Yeah they're stupid as frick.
+ I would have just done thing = {} but then that would have removed all of the non-indexed
+ things as well (ie. the subclasses and variables and properties, not just the list stuff)
+ so isntead I removed the first element over and over till there was no elements left,
+ but that left the functions in tact. :)
+ ]]
 function game.reset()
 	map.init(settings.map.width, settings.map.height, settings.map.rooms.amount)
 	--sprite.init()
@@ -25,9 +39,9 @@ function game.reset()
 		table.remove(loot, 1)
 	end
 
-  	world_object.init()
+  world_object.init()
 	enemy.makeabunchofenemies()
-  	loot.makeabunchofloot()
+  loot.makeabunchofloot()
 
 	new_hero = false
 	while not new_hero do
@@ -42,18 +56,19 @@ function game.reset()
 
 	love.graphics.setBackgroundColor(settings.render.background.r, settings.render.background.g, settings.render.background.b)
 end
-
+-- called when the user presses space to trigger the end of the players turn and all the enemy's turns
 function game.turn()
 	hero.turnAll()
 	enemy.turnAll()
 end
 
 game.logs = {}
-
+-- Adds a thing to the logs list.
 function game.say(stuff)
 	table.insert(game.logs, {v = stuff, t = game.runtime})
 end
-
+-- Prints the log list to the left side of the screen, which notifies the user of Pretty
+-- much everything, like turn stuff, attack stuff, inventory stuff and whatnot.
 function game.printlogs()
 	offset = 0
 	h = 100
@@ -78,7 +93,7 @@ function game.printlogs()
 	love.graphics.setColor(255,255,255)
 	--love.graphics.rectangle("line", 15, 115, 250, 20 * offset)
 end
-
+-- Moves paths for all heros and enemies
 function game.move_paths(dt)
 	for i = 1, #hero do
 		hero.move_path(i, dt)
@@ -87,7 +102,8 @@ function game.move_paths(dt)
 		enemy.move_path(i, dt)
 	end
 end
-
+-- called in love.update(). basically an abstraction. This updates the camera, does
+-- the pathfiniding for the heros and moves the game paths.
 function game.update(dt)
 		camera.update(dt)
 		pathfind.reset()
@@ -107,7 +123,24 @@ function game.update(dt)
 		game.move_paths(dt)
 end
 
-
+-- Draws EVERYTHING. No, really.
+-- Sets the camera then draws:
+-- The map
+-- The world objects
+-- The loot
+-- The hero's path
+-- The enemies
+-- The heroes
+-- Then unsets the camera and draws:
+-- The hero UI
+-- The hero inventory
+-- The hero status effects
+-- Tooltips for a few stuff
+-- FPS
+-- renders the logs
+-- Of course oall of these things use functions, so it's not THAT bad.
+-- But still. It figures out WHICH of these things to draw
+-- so that their draw functions can be easy to see and mod
 function game.draw()
 	camera.set()
 	map.draw()
@@ -187,7 +220,8 @@ function game.draw()
 	--love.graphics.print(camera.vzoom..'|'..camera.offset.x..'|'..camera.offset.y, 20, 20)
 	game.printlogs()
 end
-
+-- Figures out which key is pressed and what action to take. ie. space cycles turns,
+-- and f fortifies the current selected hero
 function game.keypressed(key)
 	if key == "i" then
 		if showInventory then
@@ -231,12 +265,12 @@ function game.keypressed(key)
 		menu.current = menu.scene.paused
 	end
 end
-
+-- Calls the hero and enemy mousepressed functions
 function game.mousepressed(x, y, button, istouch)
 	hero.mousepressed(x, y, button, istouch)
 	enemy.mousepressed(x, y, button, istouch)
 end
-
+-- Taunts the user
 function game.next_level()
-	game.say("If there were a level 2, you'd go there now.")
+	game.say("If there were a level 2, you'd go there now. Too bad the developers are lazy and have deadlines. Sucked in.")
 end

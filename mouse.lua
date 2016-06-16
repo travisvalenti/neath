@@ -1,5 +1,8 @@
 mouse = {}
+-- This file. I hate this file. I should've put this stuff somewhere else but I
+-- was already 1000 lines in.
 
+-- This draws a tooltip at the mouse position with a title and content.
 function mouse.drawtooltip(head, content)
 	x, y = love.mouse.getPosition()
 	w = math.max(font:getWidth(head), font:getWidth(content)) + 15
@@ -13,6 +16,7 @@ function mouse.drawtooltip(head, content)
 	love.graphics.print(content, x + 4 - w, y + 24)
 end
 
+-- this checks if the mouse is above an inventory item
 function mouse.overInventoryItem(h)
 	x, y = love.mouse.getPosition()
 	-- i = gx + (gy - 1) * 4
@@ -25,7 +29,7 @@ function mouse.overInventoryItem(h)
 		end
 	end
 	return false
-	--[[
+	--[[ THis is the old inventory check for the list inventory instead of the grid.
 	if x >= inventory.x and x <= inventory.x + inventory.w then
 		print(x)
 		i = math.floor((y - inventory.y)/20)

@@ -1,3 +1,5 @@
+-- Please ignore this file. I'm like 97.2% sure it's unused
+
 sprite = {}
 sprite.quads = {}
 function sprite.init()

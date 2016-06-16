@@ -1,4 +1,7 @@
 menu.button = {}
+--This is a really simple class which sets defaults if they're not given.
+-- I didn't actually use this class but I wanted to. It's similar to what I did
+--  Note to self: Add this into the current menu system to make it easier.
 function menu.button.new(text, x, y, w, h, action, color, color2)
   text = text or "NIL_VALUE"
   x = x or 0

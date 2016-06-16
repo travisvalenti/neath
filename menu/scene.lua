@@ -1,5 +1,21 @@
 menu.scene = {}
 
+--[[
+ Okay so this is basically wizardry but I'll try my best.
+In each of these tables there are miscellaneous variables (e.g. button_y) which
+are only used in those specific menu scenes.
+Below that is the click variable, which is binded to a function. Each of the objects
+has the click function, which is called whenever the game.paused is true or game.started
+is false and the user clicks.
+In the click function there is a bunch of util.inside() calls which check if the mouse
+is in the bounds of a button. Then if it is it performs the function inside the if
+NB: This should incorporate the Button class but I couldn't be bothered.
+Below click is draw, which is called every frame that this menu is active, that is
+every frame that menu.current is set to that menu, and game.paused is true or game.started
+is false.
+Inside draw it draws all of the buttons and stuff. Pretty simple.
+]]
+
 menu.scene.main = {
 	button_y = 360,
 	button_size = 100,
@@ -9,15 +25,12 @@ menu.scene.main = {
 		if x > settings.window.width - 38 and y < 38 then
 			love.event.quit()
 		elseif util.inside(x, y, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y, 128, 128) then
-			print("Start")
 			game.paused = false
 			game.started = true
 		elseif util.inside(x, y, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y, 128, 128) then
-			print("Settings")
 			menu.scene.settings.last = menu.scene.main
 			menu.current = menu.scene.settings
 		elseif util.inside(x, y, love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y, 128, 128) then
-			print("Quit")
 			love.event.quit()
 		end
 	end,
@@ -88,7 +101,12 @@ menu.scene.splash = {
 	end,
 
 }
-
+--[[
+One thing to note about settings is that it has submenus, which display above the
+settings draw. I did this by drawing the settings menu and then using a variable called
+subMenu and drawing that as well.
+Settings only has buttons to go back, and to change and close submenus
+]]
 menu.scene.settings = {
 	click = function(x, y)
 
@@ -280,15 +298,12 @@ menu.scene.paused = {
 		if x > settings.window.width - 38 and y < 38 then
 			love.event.quit()
 		elseif util.inside(x, y, love.graphics.getWidth() / 2 - menu.scene.main.margin - 128 - 64 , menu.scene.main.button_y, 128, 128) then
-			print("Continue")
 			game.paused = false
 			game.started = true
 		elseif util.inside(x, y, love.graphics.getWidth() / 2 - 64 , menu.scene.main.button_y, 128, 128) then
-			print("Settings")
 			menu.scene.settings.last = menu.scene.paused
 			menu.current = menu.scene.settings
 		elseif util.inside(x, y, love.graphics.getWidth() / 2 + menu.scene.main.margin + 64, menu.scene.main.button_y, 128, 128) then
-			print("Quit")
 			love.event.quit()
 		end
 	end,

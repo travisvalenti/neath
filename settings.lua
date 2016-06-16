@@ -1,3 +1,4 @@
+-- This doesn't really need comments, it's basically just a markdown file.
 settings = {
 	bGrabMouse = false,
 	bMuted = false,

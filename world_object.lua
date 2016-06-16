@@ -1,7 +1,10 @@
 world_object = {}
 
+--defines prisoner types.
 prisoners = {'brute', 'swift', 'heavy'}
 
+-- defines all world object types and creates their functions there.
+-- This is another example of an object structure.
 world_object.types = {}
 world_object.types['prisoner_unlocked'] = {
   image = love.graphics.newImage('/assets/prisoner_unlocked.png'),
@@ -57,6 +60,8 @@ world_object.types['next_level'] = {
   end,
 }
 
+--Spawns all the world objects basically a repeat of the loot spawn thing exception-reporting
+-- with specific items and amounts
 function world_object.init()
 
   iter = 0
@@ -103,7 +108,7 @@ function world_object.init()
   end
 
 end
-
+-- iterates and returns a world object at x, y or false
 function world_object.atpos(x, y)
   for i = 1, #world_object do
     if world_object[i].x == x and world_object[i].y == y then
@@ -112,14 +117,14 @@ function world_object.atpos(x, y)
   end
   return false
 end
-
+-- calls the wo world object's function with argument i
 function world_object.interact(wo, i)
   r = world_object[wo].func(world_object[wo].x, world_object[wo].y, wo, i)
   if r then
     table.remove(world_object, wo)
   end
 end
-
+-- creates a new world_object t at coords x, y
 function world_object.new(x, y, t)
   --print('world_object: '..t)
   table.insert(world_object, {
@@ -131,13 +136,13 @@ function world_object.new(x, y, t)
 		func = world_object.types[t].func,
 	})
 end
-
+-- iterates and draws
 function world_object.drawAll()
 	for i = 1, #world_object do
 		world_object.draw(i)
 	end
 end
-
+-- draws the image of each world object after calulating luminance
 function world_object.draw(i)
   --print(world_object[i].x..', '..world_object[i].y)
 	luminance = util.calc_lum(world_object[i].x, world_object[i].y)

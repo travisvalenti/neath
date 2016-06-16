@@ -1,3 +1,6 @@
+-- This sets the walkability of tiles so If I feel like adding more later I can
+-- also, wall doesn't use that color anymore it uses a sprite, but i needed to
+-- keep the values there cause reasons.
 tile = {}
 
 tile['wall'] = {

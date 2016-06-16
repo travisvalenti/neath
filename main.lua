@@ -1,3 +1,5 @@
+-- Basically a sh**load of imports here. This links all the files together.
+-- Note: these are all manually created files, not external libraries. Good luck.
 require('settings')
 require('util')
 require('game')
@@ -13,6 +15,7 @@ require('mouse')
 require('menu')
 require('world_object')
 
+-- Just some variable declarations to default values.
 fps = 0
 ax, ay, bx, by = 0,0,0,0
 nax, nay = 0,0
@@ -23,9 +26,16 @@ images = {}
 game.started = false
 menu.current = menu.scene.splash
 
+--Now this is an interesting one. The default tile is 200 but the images are
+-- 256 so I divide the images by 256 to get a 1px image then times by 200,
+-- like this: 256p/256 = 1p, 1p*200 = 200p.
+-- Put that together and you get a ratio of 200/256 to scale everything by
 scale = 200/256
 
+
+--This loads everything. EVERYTHING.
 function love.load(arg) -- Load the level
+	-- loads and plays the music and applies the settings
 	music = love.audio.newSource("/assets/sb_fading.mp3")
 	music:play()
 	if settings.bMuted then
@@ -36,17 +46,21 @@ function love.load(arg) -- Load the level
 
 	font = love.graphics.newFont(12)
 	love.graphics.setFont(font)
+
+	--IDK what sprite.init() does. I have no sprites. Only images.
 	sprite.init()
+
+	--this is that game thing that runs parralell to love main see why in game.lua
 	game.init()
 
+	--changes the cursor icon.
+	--NB: make a setting for that
 	cursor = love.mouse.newCursor('/assets/pointing.png', 0,0)
 	love.mouse.setCursor(cursor)
 
+	-- A big chunk of image imports. These need to be in love.load()
 	images.logo = love.graphics.newImage('/assets/neath.png')
 	images.logo_big = love.graphics.newImage('/assets/neath_big.png')
-	--images.fortified = love.graphics.newImage('/assets/fortify.png')
-	--images.player = love.graphics.newImage('/assets/hero.png')
-	--images.enemy = love.graphics.newImage('/assets/enemy.png')
 	images.sword = love.graphics.newImage('/assets/sword.png')
 	images.armour = love.graphics.newImage('/assets/armour.png')
 	images.enemy = love.graphics.newImage('/assets/lizardman.png')
@@ -110,23 +124,26 @@ function love.load(arg) -- Load the level
 	images.equipment['full armour'] = love.graphics.newImage('/assets/battle-gear.png')
 
 
+--Gosh, finally those image imports are donw. What a marathon
+-- anyway this function resets the game (or starts it) to be at default values
 	game.reset()
 
-	--hero.new(1,1)
-	--ax, ay, bx, by = pathfind.dostuff()
-	--pathfind.calculate(ax, ay, bx, by, 20)
-
-	--hero.spawnRandom()
-
 end
+
+
 framedt = 1
+--called every frame by love
 function love.update(dt)
+	-- adds delta time to runtime
 	game.runtime = game.runtime + dt
+	--the below code refreshes the framerate every 0.4s
 	framedt = framedt + dt
 	if framedt >= 0.4 then
 		framedt = 0
 		fps = math.floor(1/dt)
 	end
+	--This is the code that figures out when to draw the game and when to draw
+	-- the menus and stuff. It also checks for the lose-state
 	if game.paused then
 	elseif game.started then
 		game.update(dt)
@@ -139,6 +156,7 @@ function love.update(dt)
 	end
 end
 
+-- Calls all the draw stuff depending no the game variables (paused, started)
 function love.draw()
 	if game.paused then
 		menu.current.draw()
@@ -149,13 +167,12 @@ function love.draw()
 	end
 end
 
+-- called by love on each keypress. This function goes through some global
+--  and debug buttons (`) and goes through some different cases that don't need
+--   their own functions
 function love.keypressed( key ) -- called by love.
 	if key == '`' then
 		debug.debug()
-	end
-	if key == 'o' then
-		world_object.new(hero[1].x, hero[1].y + 1, 'prisoner_unlocked')
-		--print(world_object[#world_object].x..', '..world_object[#world_object].x)
 	end
 	if game.paused then
 		if key == 'escape' then
@@ -173,7 +190,8 @@ function love.keypressed( key ) -- called by love.
 	end
 end
 
-
+-- called when a mouse is clicked
+--  this is the same as the above basically
 function love.mousepressed(x, y, button, istouch)
 	if game.paused then
 		menu.mousepressed(x, y, button, istouch)

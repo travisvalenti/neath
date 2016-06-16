@@ -1,6 +1,12 @@
 loot = {}
+-- this is the amount of loot objects to spawn. It doesn't actually
+-- spawn this many but it ATTEMPTS to, remember there is a high likelihood
+--that these attempts will fail due to collisions with walls or other objects.
 loot.amount = 1000
-
+-- This defines all of the functions for items. Pretty basic sorta. This is yet
+-- another object structure in lua. This project uses a bunch of different ones
+-- Because I wanted to test a bunch of different ways of doing things to see which
+-- is best.
 loot.functions = {}
 function loot.functions.useless(h, i, v)
 	game.say("This "..v.." is useless to you right now. You should probably sell it.")
@@ -37,6 +43,8 @@ function loot.functions.night_sight(h, i, v)
 
 end
 
+-- same thing as above except these are called to equip an item by category.
+-- Many items share these equip functions
 loot.functions.equip = {}
 function loot.functions.equip.sword(h, i, v)
 	if hero[h].sword then
@@ -64,7 +72,7 @@ function loot.functions.equip.armour(h, i, v)
 	hero[h].health = math.min(hero[h].health, hero[h].maxhealth)
 	table.remove(hero[h].items, i)
 end
-
+-- same as above except equiping bags.
 function loot.functions.bag(h, i, v)
 	if hero[h].capacity < v then
 		hero[h].capacity = v
@@ -75,6 +83,8 @@ function loot.functions.bag(h, i, v)
 	end
 end
 
+-- This table defines all loot types as well as their colors and flavors (get it?)
+-- It also defines their functions n stuff
 loot.types = {
 	["treasure"] = {
 		name = "treasure",
@@ -247,6 +257,8 @@ loot.types = {
 	},
 }
 
+-- This function tries to make a heck lot of loot and fails, but succeeds at
+-- making a pretty good distribution of chests
 function loot.makeabunchofloot()
 	for t = 1, #settings.balance.loot do
 		for i = 1, settings.balance.loot[t].amount do
@@ -261,6 +273,7 @@ function loot.makeabunchofloot()
 	end
 end
 
+-- simply creates a new loot of type t at x = ix, y = iy coords
 function loot.new(ix, iy, t)
 	table.insert(loot, {
 		name = loot.types[t].name,
@@ -275,7 +288,8 @@ function loot.new(ix, iy, t)
 		color = loot.types[t].color
 	})
 end
-
+-- picks up item i into hero h's inventory if there's enough room. Returns true
+-- if successful
 function loot.pickup(i, h)
 	if #hero[h].items < hero[h].capacity then
 		game.say("Picked Up: "..loot[i].name)
@@ -296,6 +310,7 @@ function loot.pickup(i, h)
 	end
 end
 
+-- iterates and returns any loot at x, y or false
 function loot.at(x, y)
 	for i = 1, #loot do
 		if loot[i].x == x and loot[i].y == y then
@@ -305,16 +320,16 @@ function loot.at(x, y)
 	return false
 end
 
+-- iterates and draws
 function loot.drawAll()
 	for i = 1, #loot do
 		loot.draw(i)
 	end
 end
 
+-- Draws a chest with the loot's colour
 function loot.draw(i)
 	luminance = util.calc_lum(loot[i].x, loot[i].y)
 	love.graphics.setColor(loot[i].color.r * luminance, loot[i].color.g * luminance, loot[i].color.b * luminance)
-	--love.graphics.rectangle("fill", loot[i].x * settings.render.tile_size + 6, loot[i].y * settings.render.tile_size + 6, settings.render.tile_size - 12, settings.render.tile_size - 12)
-	--love.graphics.draw(loot[i].image, loot[i].x * settings.render.tile_size, loot[i].y * settings.render.tile_size)
 	love.graphics.draw(images.item, loot[i].x * settings.render.tile_size, loot[i].y * settings.render.tile_size, nil, settings.render.tile_size/128)
 end

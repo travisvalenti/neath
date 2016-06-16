@@ -1,6 +1,8 @@
 hero = {}
 hero.selected = nil
-
+-- Defines all the hero classes. They're not actually named in game so name doesn't
+-- really matter.
+--Each hero has speed, attack, max health, max actions and an image.
 hero.classes = {}
 hero.classes['hero'] = {
 	speed = 10,
@@ -33,6 +35,7 @@ hero.classes['heavy'] = {
 	img = love.graphics.newImage('/assets/heavy.png')
 
 }
+--Creats a new hero at x,y of type c
 function hero.new(ix, iy, c)
 	table.insert(hero, {x = ix, y = iy, class = c, items = {}, rx = ix, ry = iy})
 	if not hero[#hero].class then
@@ -65,7 +68,7 @@ inventory.armour = {
 	x = 300,
 	y = 150,
 }
-
+-- finds the manhattan distance closest hero
 function hero.closest(x, y)
 	for i = 1, #hero do
 		d = util.manhattan(x, y, hero[i].x, hero[i].y)
@@ -81,13 +84,13 @@ function hero.closest(x, y)
 	end
 	if c then return c end
 end
-
+-- iterates and calls turn()
 function hero.turnAll()
 	for i = 1, #hero do
 		hero.turn(i)
 	end
 end
-
+-- reset actions and apply status effects and end effects.
 function hero.turn(i)
 	hero[i].actions = hero[i].maxactions
 	remove = {}
@@ -109,7 +112,8 @@ function hero.turn(i)
 		end
 	end
 end
-
+-- heals the i hero by v Can be negative health to damage. If health == 0 then kill
+-- Health can't be below 0 because of the clamp so that logic is fine.
 function hero.heal(i, v)
 	hero[i].health = hero[i].health + v
 	hero[i].health = math.min(hero[i].health, hero[i].maxhealth)
@@ -119,13 +123,14 @@ function hero.heal(i, v)
 	end
 end
 
+--kills the hero. Removes it from the table and deselects it.
 function hero.kill(h)
 	table.remove(hero, h)
 	if hero.selected == h then
 		hero.selected = nil
 	end
 end
-
+-- selects the hero at x, y
 function hero.getselect(x, y)
 	for i = 1, #hero do
 		if hero[i].x == x and hero[i].y == y then
@@ -134,7 +139,8 @@ function hero.getselect(x, y)
 		end
 	end
 end
-
+-- selects a hero by index
+-- deslects any other selected thing.
 function hero.select(i)
 	if hero.selected then
 
@@ -156,28 +162,17 @@ function hero.select(i)
 		hero.selected = i
 		hero[i].selected = true
 	end
-
-	--[[if hero.selected then
-		if hero.selected == i then
-			hero.selected = nil
-			hero[i].selected = nil
-			hero[hero.selected].selected = nil
-		else
-			hero.selected = i
-			hero[i].selected = true
-			hero[hero.selected].selected = nil
-		end
-
-	else
-		if enemy.selected then
-			enemy[enemy.selected].selected = nil
-			enemy.selected = nil
-		end
-		hero.selected = i
-		hero[i].selected = true
-	end]]
 end
-
+-- moves the hero. Yeah, seems too complicated for moving aye? I'll break it down
+-- Finds the grid point of the x, y coords
+-- Checks if a path exists, then checks if there arte enough actions
+-- unfortifies if needed.
+-- sets the logic location to the end of the path.
+-- takes an action
+-- adds the reversed path to the hero's animation path
+-- sets the final location to grab if there's a loot there
+-- checks if there's a world object at the gridpos and if there is it uses it.
+-- at the end tells the user if they're out of actions.
 function hero.move(i, x, y)
 	ix, iy = util.pointtogrid(x, y)
 	if path then
@@ -211,12 +206,24 @@ function hero.move(i, x, y)
 		end
 	end
 end
-
+-- drops an item. adds it to the loot list.
 function hero.drop(h, i)
 	loot.new(hero[h].x, hero[h].y, hero[h].items[i].name)
 	table.remove(hero[h].items, i)
 end
-
+-- just another good ol draw.
+-- iterates through the possible locations and uses a fancy formula I made up to figure out
+-- which item to render
+--[[
+LEARNIN TIME:
+the grid render goes from 1 to 4 in x and from 1 to capacity/4 in y. That means an x by y gridpos
+the formula [x + (y - 1) * 4] for the index means that it will be index 1 when x is
+1 and y is 1, then 2 when x is 2 and y is 1 and so on.
+Then when y is 2 and x is 1, it will be 5, and iterate like that. This way
+it reverse engineers the index based on location, isntead of location based
+on index. I did it this way to avoid extra loops and also cause it's easier to
+get 1 variable from 2 than 2 variables from one
+]]
 function hero.drawInventory(h)
 	if hero[h] then
 	love.graphics.setColor(150, 150, 150)
@@ -263,7 +270,7 @@ function hero.drawInventory(h)
 	end
 end
 
-	--love.graphics.draw(images.armour, 100, 160)
+	--this is the old list render, which I'm keeping in for nostalgia reasons :p
 	--[[
 	o = 0
 
@@ -296,13 +303,15 @@ end
 	love.graphics.rectangle("line", inventory.x, inventory.y + 20, inventory.w, 20 * o)
 	]]
 end
-
+-- iterates and draws
 function hero.drawAll()
 	for i = 1, #hero do
 		hero.draw(i)
 	end
 end
-
+-- Draws all the hero images and adds their status effects on top.
+-- Also draw's their render path.
+-- oh, i forgot. It calculates luminosity first.
 function hero.draw(i)
 	love.graphics.setColor(255, 255, 255)
 	if hero[i].selected then
@@ -368,7 +377,7 @@ function hero.draw(i)
 		--love.graphics.draw(images.fortified, hero[i].rx * settings.render.tile_size, hero[i].ry * settings.render.tile_size)
 	--end
 end
-
+-- iterates through the hero's statuses and returns true if status is found
 function hero.has_status(i, status)
 	for s = 1, #hero[i].status do
 		if hero[i].status[s].name == status then
@@ -377,7 +386,7 @@ function hero.has_status(i, status)
 	end
 	return false
 end
-
+--iterates through the hero and returns the index of the hero at x, y or false
 function hero.atpos(x, y)
 	for i = 1, #hero do
 		if hero[i].x == x and hero[i].y == y then
@@ -386,6 +395,8 @@ function hero.atpos(x, y)
 	end
 	return false
 end
+
+--here all the status effects are defined, and any turn based effects
 hero.status = {}
 hero.status.effect = {}
 hero.status.effect['fortified'] = function(i)
@@ -410,14 +421,15 @@ end
 hero.status.endeffect['night sight'] = function(i)
 end
 
-
+-- this is all then status flavors. I tried a different object structure this time.
+-- It turned out pretty alright I guess
 hero.status.flavor = {
 	['poisoned'] = {'Poisoned:', 'You take 5hp per turn. Wears off in 3-5 turns.'},
 	['permeating sight'] = {'Permeating sight:', 'See what is inside chests before you open them by mousing over them.'},
 	['night sight'] = {'Night sight:', 'Have a higher view radius'},
 	['fortified'] = {'Fortified:', 'You heal 5hp per turn. You will automatically unfortify if you move or attack.'},
 }
-
+-- Draws the statuses in the top right
 	function hero.status.draw(i)
 		love.graphics.setColor(255, 255, 255)
 		for s = 1, #hero[i].status do
@@ -428,6 +440,7 @@ hero.status.flavor = {
 			mouse.drawtooltip(hero.status.flavor[hero[1].status[s].name][1], hero.status.flavor[hero[1].status[s].name][2])
 		end
 	end
+	--checks if the mouse is above a drawn status
 function hero.status.over(i)
 	x, y = love.mouse.getPosition()
 	for s = 1, #hero[i].status do
@@ -437,6 +450,7 @@ function hero.status.over(i)
 	end
 	return false
 end
+--adds a status effect
 	function hero.status.add(i, stat, time)
 		for s = 1, #hero[i].status do
 			if hero[i].status[s].name == stat then
@@ -447,6 +461,7 @@ end
 		end
 		table.insert(hero[i].status, {name = stat, time = time, total = time})
 	end
+	--removes a status effect
 	function hero.status.remove(i, stat)
 		for s = 1, #hero[i].status do
 			if hero[i].status[s] == stat then
@@ -454,14 +469,17 @@ end
 			end
 		end
 	end
+	--fortify was done like this because it was already linked in in so many places
+	--as this so I just did it this way
 	function hero.status.fortify(i)
 		table.insert(hero[i].status, 1, {name='fortified', time = 2, total = 2})
 	end
+	--ditto for unfortify
 	function hero.status.unfortify(i)
 		table.remove(hero[i].status, 1)
 	end
 
-
+-- cycles through the heros. called when the user presses enter
 function hero.cycle()
 	if hero.selected then
 		i = hero.selected
@@ -483,6 +501,7 @@ function hero.cycle()
 		end
 	end
 end
+--draws the hero's UI.
 function hero.drawUI(i, p)
 	if hero[i] then
 		ui_size = 80
@@ -513,7 +532,7 @@ function hero.drawUI(i, p)
 		end
 	end
 end
-
+-- attacks enemy e with hero i
 function hero.attack(i, e)
 	if hero[i].actions >= 1 then
 		game.say("You attacked")
@@ -537,7 +556,17 @@ function hero.attack(i, e)
 		game.say("You can't attack, you're out of actions")
 	end
 end
-
+-- animates the hero along the path
+--[[
+LEARNIN TIME:
+the hero has a render pos (rx and ry) as well as a logic pos (x and y). This is
+also true for the enemy. Basically for all intensive purposes, the game thinks
+the hero is at the logic position, but it is drawn at the render position.
+This way it takes up space and can be attacked at the logic position.
+I could, in future, make an end turn impossible until the rendered position
+catches up with the logic position, but I believe it will slow the pace of the
+game down.
+]]
 function hero.move_path(i, dt)
 	if #hero[i].path > 0 then
 		if not hero[i].time then
@@ -567,7 +596,8 @@ function hero.move_path(i, dt)
 end
 
 
-
+--called when the mouse it pressed. Checks if the hero can move, or attack, or
+-- be selected or use an item. If so, it does it.
 function hero.mousepressed(x, y, button, istouch)
 	ix, iy = util.pointtogrid(x, y)
 	if button == 1 then

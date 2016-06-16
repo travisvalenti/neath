@@ -1,11 +1,31 @@
 map = {}
+-- This code is complicated. Let's get started.
 map.bitmasks = {}
+--Calls generate and sets the width and heigh variables.
+-- This function is basically so we can change the map size in game in later levels
 function map.init(w, h, r)
 	map.generate(w, h, r)
 	map.width = w
 	map.height = h
 end
 
+--Generates the map
+--[[
+OVERVIEW:
+Starts by creating two tables, first is map and second is map.bitmasks.
+It sets all the bitmasks as null and the map as 'wall'
+then it sets room_amount to the settings of map.rooms.amount
+it resets the list of rooms
+and defines a buffer. <- No longer Used
+It then tries to create rooms for room_amount times, not creating if they intersect
+with one another. This results in a bunch of rectangles in the grid, stored as
+obejcts with x, y, width and height. Useful as rooms.
+It then goes through them all and fills them in with 'floor'
+After that it goes through and links each room to an unlinked room then sets
+that room as linked. By linked I mean it uses an algorithm to create a 'path'
+between the two rooms.
+after that it calls calc_bitmasks, which I'll explain later.
+]]
 function map.generate(w, h, r)
 	for x = 1, w do
 		map[x] = {}
@@ -90,6 +110,10 @@ function map.generate(w, h, r)
 	map.calc_bitmasks()
 end
 
+-- Bitmasking is complicated. Basically this returns some values that help
+-- determine what image to draw.
+--See http://gamedevelopment.tutsplus.com/tutorials/how-to-use-tile-bitmasking-to-auto-tile-your-level-layouts--cms-25673
+-- for an explanation (I based this directly off of that)
 function map.calc_bitmasks()
 	for x = 1, #map do
 		for y = 1, #map[x] do
@@ -126,7 +150,7 @@ function map.calc_bitmasks()
 		end
 	end
 end
-
+--Iterates through each tile, calulates luminance and draws it.
 function map.draw()
 	for x = 1, map.width do
 		for y = 1, map.height do
