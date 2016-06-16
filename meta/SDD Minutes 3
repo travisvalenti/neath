@@ -1,0 +1,40 @@
+Overview of project
+Showcase of current progress on game
+ - Turn based movement
+ - Inventory
+ - Use Items
+ - Camera
+ - Enemy pathfinding
+ - Character based inventory
+ - Bugs
+Needs:
+ - Add Audio
+ - Add animation
+ - Make menus
+ - Add player preferences
+ - Add textures
+ - Fix the pathfinding Bug
+
+Progress Since last meeting:
+ - Changed To Love
+ - Made random level generation
+ - Fixed pathfinding
+ - Made player control
+ - made enemy move
+ - Made enemy attack
+ - Made fortification
+ - Made items
+ - Made item usage
+ - made item pickup
+ - Haven't started documentation
+
+Advice to put a schedule to do the documentation and study.
+Warning that I only have two weeks left.
+"If worse comes to worse, that bug is not gonna affect the program"
+
+q- Do I need to do all docs again or just this term's
+a- Just this terms
+q- Do I have to use a blog for the logs
+a- no, as long as it's thorough
+q- Can I make it up a little?
+a- Most people do, I want to see the progression
