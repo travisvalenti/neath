@@ -44,10 +44,10 @@ settings = {
 				name = 'strange unmarked black potion',
 				amount = 10,
 			},
-			{
-				name = 'strange green glowing potion',
-				amount = 10,
-			},
+			--{
+			--	name = 'strange green glowing potion',
+			--	amount = 10,
+			--},
 			{
 				name = 'elixir',
 				amount = 5,
