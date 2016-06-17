@@ -87,4 +87,5 @@ function camera.update(dt)
 	if love.keyboard.isDown("e") then
 		camera.zoom(-100 * dt)
 	end
+
 end

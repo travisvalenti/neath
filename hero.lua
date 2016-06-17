@@ -175,6 +175,7 @@ end
 -- at the end tells the user if they're out of actions.
 function hero.move(i, x, y)
 	ix, iy = util.pointtogrid(x, y)
+
 	if path then
 		if hero[i].actions > 0 then
 			if hero[i].fortified then

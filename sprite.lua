@@ -26,7 +26,6 @@ function sprite.init()
 	sprite.addQuad(14, 400, 600)
 	sprite.addQuad(15, 600, 600)
 
-
 end
 
 function sprite.addQuad(n, x, y)

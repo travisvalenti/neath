@@ -152,6 +152,8 @@ function game.draw()
 	if hero.selected then
 		--pathfind.debugcalulations()
 		pathfind.debugpath()
+		--pathfind.debugcalulations()
+
 	end
 	enemy.drawAll()
 
