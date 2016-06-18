@@ -1,0 +1,41 @@
+Meeting Minutes 1
+
+Original Plan: Game Engine.
+ - Too large of a scope
+ - Difficulty documenting
+ - Difficulty Rendering using OpenGL
+Talk about new idea: Game (Neath)
+ - Consideration of Game Engine
+Question about system boundaries
+Question about marking methods
+Discussion of engine justification (Unreal Engine 4 [UE4])
+ - Better language understanding (C++)
+ - More powerful Engine
+ - Better graphics
+Quick google search about minimum system requirements of UE4
+Discussion of development at school considering high system requirements
+Issues with time to create pseudo-code with inbound due date
+Question: "How do I do a storyboard for a game"
+Answer: of map and annotate scenes
+Discussion of storyboarding mechanics and dataflow diagrams
+Question about ergonomic issues
+ - RSI
+ - Eye Strain
+ - Posture
+ - Text Size
+Question about the scope of parts 2 and 3
+Overview of planned features
+Discussion of Networked Multiplayer feature
+ - Procedure call built into engines
+ - Network Punch-through Drawback
+ - Lot's of extra work
+Advice to focus on single-player
+Original design for 'hot-seat' multiplayer
+Discussion of decision making AI being balanced being difficult
+Current Documentation Progress: Economic Constraints ~15%
+Advice to Submit of both documentations both old and new
+Advice to "knuckle down on documentation"
+Discussion of IPT project integration
+ - Do a separate website
+ - Showcase work
+Question about which parts need to be pseudo-coded
